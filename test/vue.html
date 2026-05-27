@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Editor - Vue Test</title>
+</head>
+<body>
+  <div id="app">
+    <h2>JSON Editor - Vue Test</h2>
+    <json-editor
+      v-model="json"
+      theme="dark"
+      placeholder="编辑 JSON..."
+      verbose
+      @change="e => console.log(e.detail)"
+      @error="e => console.error(e.detail)"
+    />
+  </div>
+
+  <script type="module">
+    import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+    import '../lib/json-editor.js'
+
+    createApp({
+      data() {
+        return {
+          json: '{"name":"Tom","age":2}'
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>

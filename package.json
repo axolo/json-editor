@@ -1,0 +1,35 @@
+{
+  "name": "@axolo/json-editor",
+  "version": "0.1.0",
+  "description": "A JSON Editor Web Component",
+  "license": "MIT",
+  "author": "axolo",
+  "type": "module",
+  "module": "dist/json-editor.es.js",
+  "main": "dist/json-editor.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/json-editor.es.js",
+      "require": "./dist/json-editor.umd.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "json-editor",
+    "json editor"
+  ],
+  "homepage": "https://github.com/axolo/json-editor#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axolo/json-editor.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^7.3.3"
+  }
+}

@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+yarn.lock
+pnpm-debug.log*
+pnpm-lock.yaml
+pnpm-workspace.yaml
+package-lock.json
+typed-router.d.ts
+components.d.ts
+auto-imports.d.ts
+vite.config.timestamp*.*
+
+# Editor directories and files
+.vscode
+.idea
+.trae
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
