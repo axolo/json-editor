@@ -33,6 +33,23 @@ npm i @axolo/json-editor
 
 ### Vue
 
+```js
+// vite.config.js
+import vue from '@vitejs/plugin-vue'
+
+export default {
+  plugins: [      
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: tag => tag.startsWith('json-editor')
+        }
+      }
+    })
+  ]
+}
+```
+
 ```html
 <script setup>
 import { ref } from 'vue'
