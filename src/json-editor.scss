@@ -1,6 +1,7 @@
 :host {
   display: block;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  width: 100%;
 }
 
 :host([theme="dark"]) .json-editor-wrapper,
@@ -51,7 +52,6 @@
 
   .json-editor-container {
     display: flex;
-    width: 100%;
     min-height: 10em;
     max-height: 25em;
     overflow: auto;
@@ -69,6 +69,10 @@
       border-right: 1px solid var(--border-line-numbers);
       flex-shrink: 0;
       transition: background-color 0.2s, color 0.2s;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     .line-numbers span {
@@ -105,6 +109,8 @@
       font-family: inherit;
       tab-size: 2;
       transition: color 0.2s;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-color) var(--bg-color);
     }
 
     .code-text:focus {
