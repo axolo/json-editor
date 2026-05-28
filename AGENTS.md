@@ -18,14 +18,15 @@ npm run build  # 构建编译
 ## 项目目录结构
 
 ```
-├── dist/                   # 发布目录
-|   ├── json-editor.es.js   # ES 模块版本
-│   └── json-editor.umd.js  # UMD 版本，支持 CommonJS、AMD、浏览器环境
-├── lib/                    # 库目录
-│   └── json-editor.js      # 主库文件
-├── test                    # 测试目录
-│   ├── index.html          # HTML 测试页面
-│   ├── vue.html            # Vue 测试页面
-│   └── react.html          # React 测试页面
-└── README.md               # 项目说明文档
+├── dist/                     # 发布目录
+|   ├── json-editor.es.js     # ES 模块版本
+│   └── json-editor.umd.js    # UMD 版本，支持 CommonJS、AMD、浏览器环境
+├── src/                      # 源码目录
+│   ├── json-editor.html      # 主库模板
+│   ├── json-editor.scss      # 主库样式
+│   └── json-editor.js        # 主库文件
+├── test/                     # 测试目录
+│   ├── index.html            # HTML 测试页面
+│   └── vue.html              # Vue 测试页面
+└── README.md                 # 项目说明文档
 ```

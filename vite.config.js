@@ -2,11 +2,12 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   build: {
+    minify: 'terser',
     lib: {
-      entry: './lib/json-editor.js',
+      entry: 'src/json-editor.js',
       name: 'JsonEditor',
       formats: ['es', 'umd'],
       fileName: (format) => `json-editor.${format}.js`
-    }
+    },
   }
 })

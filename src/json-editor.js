@@ -1,207 +1,50 @@
-const template = document.createElement('template')
-
-template.innerHTML = `
-  <style>
-    :host {
-      display: block;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-    }
-
-    :host([theme="dark"]) .editor-wrapper,
-    :host([theme="system"]) .editor-wrapper {
-      --border-color: #475569;
-      --border-color-focus: #667eea;
-      --border-color-error: #ef4444;
-      --bg-color: #1e293b;
-      --bg-color-line-numbers: #0f172a;
-      --text-color: #e2e8f0;
-      --text-color-line-numbers: #64748b;
-      --border-line-numbers: #334155;
-      --error-bg: #1c1917;
-      --error-border: #7c2d12;
-      --error-text: #fca5a5;
-      --focus-glow: rgba(102, 126, 234, 0.2);
-      --error-glow: rgba(239, 68, 68, 0.2);
-      --font-size: 13px;
-      --line-height: 1.5;
-    }
-
-    :host(:not([theme="dark"]):not([theme="system"])) .editor-wrapper,
-    :host([theme="light"]) .editor-wrapper {
-      --border-color: #e5e7eb;
-      --border-color-focus: #667eea;
-      --border-color-error: #ef4444;
-      --bg-color: #ffffff;
-      --bg-color-line-numbers: #f8fafc;
-      --text-color: #1e293b;
-      --text-color-line-numbers: #94a3b8;
-      --border-line-numbers: #e2e8f0;
-      --error-bg: #fef2f2;
-      --error-border: #fee2e2;
-      --error-text: #dc2626;
-      --focus-glow: rgba(102, 126, 234, 0.1);
-      --error-glow: rgba(239, 68, 68, 0.1);
-      --font-size: 14px;
-      --line-height: 1.5;
-    }
-
-    .editor-wrapper {
-      position: relative;
-      border-radius: 0.5em;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-color);
-      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-    }
-
-    .editor-wrapper:focus-within {
-      border-color: var(--border-color-focus);
-    }
-
-    .editor-wrapper.error {
-      border-color: var(--border-color-error);
-    }
-
-    .editor-container {
-      display: flex;
-      min-height: 10em;
-      max-height: 25em;
-      overflow: auto;
-    }
-
-    .line-numbers {
-      background-color: var(--bg-color-line-numbers);
-      color: var(--text-color-line-numbers);
-      padding: 10px 8px;
-      text-align: right;
-      user-select: none;
-      font-size: var(--font-size);
-      line-height: var(--line-height);
-      min-width: 2em;
-      overflow-y: auto;
-      border-right: 1px solid var(--border-line-numbers);
-      flex-shrink: 0;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .line-numbers span {
-      display: block;
-    }
-
-    .line-numbers .error-line {
-      background-color: var(--error-bg);
-      color: var(--error-text);
-      font-weight: bold;
-      border-radius: 2px;
-    }
-
-    .code-area {
-      flex: 1;
-      position: relative;
-    }
-
-    .code-text {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      font-size: var(--font-size);
-      line-height: var(--line-height);
-      resize: none;
-      border: 0;
-      outline: 0;
-      background-color: transparent;
-      color: var(--text-color);
-      font-family: inherit;
-      tab-size: 2;
-      transition: color 0.2s;
-    }
-
-    .code-text:focus {
-      border: 0;
-      outline: 0;
-      box-shadow: none;
-    }
-
-    .code-text::placeholder {
-      color: var(--text-color-line-numbers);
-    }
-
-    .error-hint {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 8px;
-      background: var(--error-bg);
-      color: var(--error-text);
-      font-size: 12px;
-      border-top: 1px solid var(--error-border);
-    }
-
-    .error-hint svg {
-      width: 14px;
-      height: 14px;
-      flex-shrink: 0;
-    }
-  </style>
-
-  <div class="editor-wrapper">
-    <div class="editor-container">
-      <div class="line-numbers" id="line-numbers"></div>
-      <div class="code-area">
-        <textarea
-          class="code-text"
-          id="code-input"
-          spellcheck="false"
-        ></textarea>
-      </div>
-    </div>
-    <div class="error-hint" id="error-hint" style="display: none;">
-      <span id="error-message"></span>
-    </div>
-  </div>
-`
-
-const error = text => {
-  try {
-    JSON.parse(text)
-  } catch (err) {
-    err.name = 'JsonError'
-    return err
-  }
-}
-
-const getErrorLine = (err, text) => {
-  if (!err || !err.message) return null
-  const match = err.message.match(/at position (\d+)/)
-  if (match) {
-    const pos = parseInt(match[1], 10)
-    const lines = text.substring(0, pos).split('\n')
-    return lines.length
-  }
-  return null
-}
+import templateHtml from './json-editor.html?raw'
+import cssText from './json-editor.scss?raw'
 
 class JsonEditor extends HTMLElement {
   constructor() {
     super()
     this.attachShadow({ mode: 'open' })
+
+    const template = document.createElement('template')
+    template.innerHTML = templateHtml
     this.shadowRoot.appendChild(template.content.cloneNode(true))
+
+    const style = document.createElement('style')
+    style.textContent = cssText
+    this.shadowRoot.appendChild(style)
 
     this.codeInput = this.shadowRoot.getElementById('code-input')
     this.lineNumbers = this.shadowRoot.getElementById('line-numbers')
     this.errorHint = this.shadowRoot.getElementById('error-hint')
     this.errorMessage = this.shadowRoot.getElementById('error-message')
-    this.editorWrapper = this.shadowRoot.querySelector('.editor-wrapper')
+    this.editorWrapper = this.shadowRoot.querySelector('.json-editor-wrapper')
 
     this._value = ''
     this._displayValue = ''
     this.formatTimeout = null
 
     this.setupEventListeners()
+  }
+
+  error(text) {
+    try {
+      JSON.parse(text)
+    } catch (err) {
+      err.name = 'JsonError'
+      return err
+    }
+  }
+
+  getErrorLine(err, text) {
+    if (!err || !err.message) return null
+    const match = err.message.match(/at position (\d+)/)
+    if (match) {
+      const pos = parseInt(match[1], 10)
+      const lines = text.substring(0, pos).split('\n')
+      return lines.length
+    }
+    return null
   }
 
   setupEventListeners() {
@@ -307,7 +150,6 @@ class JsonEditor extends HTMLElement {
         this.updateLineNumbers()
       }
     } catch {
-      // Invalid JSON, keep original input
     }
   }
 
@@ -332,10 +174,10 @@ class JsonEditor extends HTMLElement {
       return
     }
 
-    const err = error(this._displayValue)
+    const err = this.error(this._displayValue)
 
     if (err) {
-      const errorLine = getErrorLine(err, this._displayValue)
+      const errorLine = this.getErrorLine(err, this._displayValue)
       this.editorWrapper.classList.add('error')
       this.showError(err.message)
       this.dispatchErrorEvent(err.message)
