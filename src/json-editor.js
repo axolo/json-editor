@@ -228,27 +228,34 @@ class JsonEditor extends HTMLElement {
 
   get value() {
     if (!this._displayValue.trim()) {
-      return ''
+      return this.codec ? null : ''
     }
     try {
       const parsed = JSON.parse(this._displayValue)
-      return JSON.stringify(parsed)
+      return this.codec ? parsed : JSON.stringify(parsed)
     } catch {
       return this._displayValue
     }
   }
 
   set value(newValue) {
-    this._displayValue = newValue || ''
-    if (this._displayValue.trim()) {
-      try {
-        const parsed = JSON.parse(this._displayValue)
-        this.codeInput.value = JSON.stringify(parsed, null, 2)
-      } catch {
-        this.codeInput.value = this._displayValue
-      }
+    // NOTE: 数据类型控制权交给用户，这里只负责渲染和解析
+    // if (this.codec && typeof newValue === 'object' && newValue !== null) {
+    if (this.codec) {
+      this._displayValue = JSON.stringify(newValue, null, 2)
+      this.codeInput.value = this._displayValue
     } else {
-      this.codeInput.value = ''
+      this._displayValue = newValue || ''
+      if (this._displayValue.trim()) {
+        try {
+          const parsed = JSON.parse(this._displayValue)
+          this.codeInput.value = JSON.stringify(parsed, null, 2)
+        } catch {
+          this.codeInput.value = this._displayValue
+        }
+      } else {
+        this.codeInput.value = ''
+      }
     }
     this.updateLineNumbers()
     this.validateAndUpdate()
@@ -263,7 +270,7 @@ class JsonEditor extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['value', 'theme', 'placeholder', 'verbose', 'onchange', 'onerror']
+    return ['value', 'theme', 'placeholder', 'verbose', 'onchange', 'onerror', 'codec']
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -326,6 +333,18 @@ class JsonEditor extends HTMLElement {
       this.setAttribute('verbose', '')
     } else {
       this.removeAttribute('verbose')
+    }
+  }
+
+  get codec() {
+    return this.hasAttribute('codec')
+  }
+
+  set codec(newValue) {
+    if (newValue) {
+      this.setAttribute('codec', '')
+    } else {
+      this.removeAttribute('codec')
     }
   }
 

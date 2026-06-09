@@ -10,12 +10,16 @@
     <h2>JSON Editor - Vue Test</h2>
     <json-editor
       v-model="json"
+      codec
       theme="dark"
       placeholder="编辑 JSON..."
       verbose
       @change="e => console.log(e.detail)"
       @error="e => console.error(e.detail)"
-    />
+    ></json-editor>
+    <code style="display: block;margin-top: 1em;">
+      {{ json }}
+    </code>
   </div>
 
   <script type="module">
@@ -25,7 +29,7 @@
     createApp({
       data() {
         return {
-          json: '{"name":"Tom","age":2}'
+          json: {name:'Tom',age:2}
         }
       }
     }).mount('#app')

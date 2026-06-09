@@ -6,6 +6,7 @@ A lightweight, customizable JSON Editor Web Component with validation support.
 
 - 🎨 **Theming**: Supports light, dark, and system themes
 - ✨ **Auto Formatting**: Automatically formats JSON on input
+- 🔄 **Codec**: Enables JSON.stringify/parse for data binding
 - ✅ **Validation**: Real-time JSON validation with error highlighting
 - 📝 **Line Numbers**: Shows line numbers with error highlighting
 - 🎯 **Events**: Custom events for change and error handling
@@ -42,7 +43,7 @@ export default {
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: tag => tag.startsWith('json-editor')
+          isCustomElement: tag => ['json-editor'].includes(tag)
         }
       }
     })
@@ -55,12 +56,13 @@ export default {
 import { ref } from 'vue'
 import '@axolo/json-editor'
 
-const json = ref('{"name":"Tom","age":2}')
+const json = ref({name:'Tom',age:2})
 </script>
 
 <template>
   <json-editor
     v-model="json"
+    codec
     @change="console.log"
     @error="console.error"
   />
@@ -69,14 +71,15 @@ const json = ref('{"name":"Tom","age":2}')
 
 ## Attributes
 
-|   Attribute   |   Type   |      Default       |         Description          |
-| ------------- | -------- | ------------------ | ---------------------------- |
-| `value`       | string   | `""`               | JSON string value            |
-| `theme`       | string   | `"system"`         | `light`, `dark`, or `system` |
-| `placeholder` | string   | `"Enter JSON ..."` | Placeholder text             |
-| `verbose`     | boolean  | `false`            | Show error messages          |
-| `onchange`    | function | -                  | Event handler: change        |
-| `onerror`     | function | -                  | Event handler: error         |
+|   Attribute   |   Type   |      Default       |              Description              |
+| ------------- | -------- | ------------------ | ------------------------------------- |
+| `value`       | string   | `""`               | JSON string value                     |
+| `codec`       | boolean  | `false`            | Enable codec (`JSON.stringify/parse`) |
+| `theme`       | string   | `"system"`         | `light`, `dark`, or `system`          |
+| `placeholder` | string   | `"Enter JSON ..."` | Placeholder text                      |
+| `verbose`     | boolean  | `false`            | Show error messages                   |
+| `onchange`    | function | -                  | Event handler: change                 |
+| `onerror`     | function | -                  | Event handler: error                  |
 
 ## Development
 
